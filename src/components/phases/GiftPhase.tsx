@@ -1,0 +1,316 @@
+'use client';
+
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import {
+    DndContext,
+    useDraggable,
+    useDroppable,
+    DragEndEvent,
+    DragOverlay,
+    PointerSensor,
+    useSensor,
+    useSensors,
+} from '@dnd-kit/core';
+import { restrictToVerticalAxis } from '@dnd-kit/modifiers';
+
+interface GiftPhaseProps {
+    giftImageSrc: string;
+}
+
+export default function GiftPhase({ giftImageSrc }: GiftPhaseProps) {
+    const [isRevealed, setIsRevealed] = useState(false);
+    const [ribbonRemoved, setRibbonRemoved] = useState(false);
+    const [activeId, setActiveId] = useState<string | null>(null);
+    const [isDraggingRibbon, setIsDraggingRibbon] = useState(false);
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, {
+            activationConstraint: { distance: 8 }, // better touch experience
+        })
+    );
+
+    const handleDragStart = (event: any) => {
+        setActiveId(event.active.id);
+        if (event.active.id === 'ribbon') {
+            setIsDraggingRibbon(true);
+        }
+    };
+
+    const handleDragEnd = (event: DragEndEvent) => {
+        setActiveId(null);
+        setIsDraggingRibbon(false);
+        if (event.over?.id === 'dropzone') {
+            setRibbonRemoved(true);
+            setTimeout(() => setIsRevealed(true), 500);
+        }
+    };
+
+    return (
+        <DndContext
+            sensors={sensors}
+            onDragStart={handleDragStart}
+            onDragEnd={handleDragEnd}
+            modifiers={[restrictToVerticalAxis]}
+        >
+            <div className="relative min-h-screen w-full bg-gradient-to-b from-black to-zinc-950 flex flex-col items-center justify-center px-5 sm:px-8 overflow-hidden touch-pan-y">
+                {/* Soft ambient glow */}
+                <motion.div
+                    className="fixed inset-0 bg-gradient-radial from-pink-500/5 via-transparent to-transparent pointer-events-none"
+                    animate={{ opacity: [0.4, 0.7, 0.4] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+                />
+
+                {/* Instruction header */}
+                {!isRevealed && (
+                    <motion.div
+                        initial={{ opacity: 0, y: -30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="absolute top-10 sm:top-16 left-0 right-0 text-center z-20 px-6"
+                    >
+                        <h3 className="text-3xl sm:text-4xl font-light text-white tracking-wide mb-3">
+                            A Gift for You
+                        </h3>
+                        <p className="text-zinc-400 text-base sm:text-lg">
+                            Pull the ribbon down to reveal
+                        </p>
+                    </motion.div>
+                )}
+
+                {/* Main content area */}
+                <div className="relative w-full max-w-sm sm:max-w-md flex-1 flex items-center justify-center">
+                    <AnimatePresence mode="wait">
+                        {!isRevealed ? (
+                            <motion.div
+                                key="gift"
+                                exit={{ opacity: 0, scale: 0.85, transition: { duration: 0.5 } }}
+                                className="relative"
+                            >
+                                <GiftBox ribbonRemoved={ribbonRemoved} isDragging={isDraggingRibbon} />
+                            </motion.div>
+                        ) : (
+                            <motion.div
+                                key="revealed"
+                                initial={{ opacity: 0, y: 40, scale: 0.92 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                                className="w-full px-4 sm:px-0"
+                            >
+                                <RevealedGift imageSrc={giftImageSrc} />
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
+
+                {/* Drop zone */}
+                {!isRevealed && <DropZone />}
+            </div>
+
+            <DragOverlay dropAnimation={null}>
+                {activeId === 'ribbon' && <DraggableRibbonOverlay />}
+            </DragOverlay>
+        </DndContext>
+    );
+}
+
+function GiftBox({ ribbonRemoved, isDragging }: { ribbonRemoved: boolean; isDragging: boolean }) {
+    return (
+        <div className="relative scale-90 sm:scale-100">
+            <motion.div
+                animate={ribbonRemoved ? { scale: [1, 1.04, 1] } : { scale: [1, 1.015, 1] }}
+                transition={{
+                    duration: ribbonRemoved ? 0.6 : 4,
+                    repeat: ribbonRemoved ? 0 : Infinity,
+                    ease: 'easeInOut',
+                }}
+                className="relative w-72 h-72 sm:w-80 sm:h-80 bg-gradient-to-br from-rose-400 via-pink-500 to-purple-500 rounded-3xl shadow-2xl shadow-pink-600/40"
+            >
+                <div className="absolute inset-0 bg-gradient-to-tr from-white/10 via-transparent to-white/5 rounded-3xl" />
+                <div className="absolute inset-0 rounded-3xl ring-1 ring-white/20" />
+
+                <AnimatePresence>
+                    {!ribbonRemoved && (
+                        <>
+                            {/* Vertical ribbon part - fades when dragging */}
+                            <motion.div
+                                animate={{
+                                    opacity: isDragging ? 0.35 : 1,
+                                    scale: isDragging ? 0.92 : 1,
+                                }}
+                                transition={{ duration: 0.3, ease: 'easeOut' }}
+                                className="absolute inset-x-0 top-1/2 h-10 -translate-y-1/2 bg-gradient-to-r from-purple-600 to-pink-600 shadow-xl origin-center"
+                            />
+                            {/* Horizontal ribbon part - fades when dragging */}
+                            <motion.div
+                                animate={{
+                                    opacity: isDragging ? 0.35 : 1,
+                                    scale: isDragging ? 0.92 : 1,
+                                }}
+                                transition={{ duration: 0.3, ease: 'easeOut' }}
+                                className="absolute inset-y-0 left-1/2 w-10 -translate-x-1/2 bg-gradient-to-b from-purple-600 to-pink-600 shadow-xl origin-center"
+                            />
+                        </>
+                    )}
+                </AnimatePresence>
+            </motion.div>
+
+            {!ribbonRemoved && <DraggableRibbon />}
+        </div>
+    );
+}
+
+function DraggableRibbon() {
+    const { attributes, listeners, setNodeRef, isDragging } = useDraggable({
+        id: 'ribbon',
+    });
+
+    return (
+        <div
+            ref={setNodeRef}
+            {...listeners}
+            {...attributes}
+            className="absolute -top-20 left-1/2 -translate-x-1/2 cursor-grab active:cursor-grabbing touch-none z-50"
+        >
+            <motion.div
+                animate={isDragging ? { scale: 1.12 } : { y: [0, -6, 0], scale: 1 }}
+                transition={{
+                    y: { duration: 2.2, repeat: Infinity, ease: 'easeInOut' },
+                    scale: { duration: 0.25 },
+                }}
+                className="relative"
+            >
+                <div className="w-32 h-24 relative">
+                    <div className="absolute left-1 top-0 w-14 h-16 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full -rotate-45 shadow-lg" />
+                    <div className="absolute right-1 top-0 w-14 h-16 bg-gradient-to-bl from-purple-400 to-pink-500 rounded-full rotate-45 shadow-lg" />
+                    <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-purple-600 rounded-full shadow-inner ring-2 ring-white/30" />
+
+                    <div className="absolute top-14 left-1/2 -translate-x-1/2 flex gap-3">
+                        <div className="w-4 h-14 bg-gradient-to-b from-purple-500 to-pink-600 rounded-b shadow-md -rotate-10" />
+                        <div className="w-4 h-14 bg-gradient-to-b from-purple-500 to-pink-600 rounded-b shadow-md rotate-10" />
+                    </div>
+                </div>
+
+                {!isDragging && (
+                    <motion.p
+                        animate={{ y: [0, 6, 0] }}
+                        transition={{ duration: 1.8, repeat: Infinity }}
+                        className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-sm text-zinc-300 font-medium"
+                    >
+                        Pull me ↓
+                    </motion.p>
+                )}
+            </motion.div>
+        </div>
+    );
+}
+
+function DraggableRibbonOverlay() {
+    return (
+        <div className="relative opacity-100 scale-110 pointer-events-none">
+            <div className="w-32 h-24 relative">
+                <div className="absolute left-1 top-0 w-14 h-16 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full -rotate-45 shadow-2xl" />
+                <div className="absolute right-1 top-0 w-14 h-16 bg-gradient-to-bl from-purple-400 to-pink-500 rounded-full rotate-45 shadow-2xl" />
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 bg-purple-600 rounded-full shadow-inner ring-2 ring-white/40" />
+
+                <div className="absolute top-14 left-1/2 -translate-x-1/2 flex gap-3">
+                    <div className="w-4 h-14 bg-gradient-to-b from-purple-500 to-pink-600 rounded-b shadow-lg -rotate-10" />
+                    <div className="w-4 h-14 bg-gradient-to-b from-purple-500 to-pink-600 rounded-b shadow-lg rotate-10" />
+                </div>
+            </div>
+        </div>
+    );
+}
+
+function DropZone() {
+    const { setNodeRef, isOver } = useDroppable({ id: 'dropzone' });
+
+    return (
+        <div className="absolute bottom-8 sm:bottom-12 left-0 right-0 px-5 z-30">
+            <motion.div
+                ref={setNodeRef}
+                animate={{
+                    scale: isOver ? 1.06 : 1,
+                    borderColor: isOver ? '#ec4899' : '#4b5563',
+                    backgroundColor: isOver ? 'rgba(30,30,40,0.7)' : 'rgba(20,20,30,0.4)',
+                }}
+                className="max-w-sm sm:max-w-md mx-auto h-28 rounded-3xl border-2 border-dashed backdrop-blur-md flex items-center justify-center transition-colors"
+            >
+                <div className="text-center">
+                    <motion.div
+                        animate={{ y: isOver ? -8 : 0, scale: isOver ? 1.25 : 1 }}
+                        className="text-5xl mb-2"
+                    >
+                        {isOver ? '✨' : '↓'}
+                    </motion.div>
+                    <p className="text-sm sm:text-base font-medium text-zinc-300">
+                        {isOver ? 'Release to open' : 'Drag ribbon here'}
+                    </p>
+                </div>
+            </motion.div>
+        </div>
+    );
+}
+
+function RevealedGift({ imageSrc }: { imageSrc: string }) {
+    return (
+        <div className="w-full max-w-md mx-auto relative">
+            {/* Subtle floating elements */}
+            {['❤️', '✨', '💫'].map((emoji, i) => (
+                <motion.div
+                    key={i}
+                    initial={{ opacity: 0, scale: 0, y: 0 }}
+                    animate={{
+                        opacity: [0, 0.8, 0],
+                        scale: [0.5, 1.4, 0.8],
+                        y: -120 - i * 30,
+                        x: (i - 1) * 60,
+                    }}
+                    transition={{ duration: 3.5, delay: i * 0.4, ease: 'easeOut' }}
+                    className="absolute top-1/3 left-1/2 text-4xl sm:text-5xl pointer-events-none"
+                >
+                    {emoji}
+                </motion.div>
+            ))}
+
+            <motion.div
+                className="relative aspect-[4/5] sm:aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl shadow-pink-500/30 border border-white/10 bg-zinc-900"
+                initial={{ y: 30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                transition={{ delay: 0.4, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            >
+                <img
+                    src={imageSrc}
+                    alt="Your special gift"
+                    className="w-full h-full object-cover"
+                />
+
+                <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
+
+                <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-10 text-center">
+                    <motion.p
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.8, duration: 1 }}
+                        className="text-white text-xl sm:text-2xl font-light tracking-wide leading-relaxed"
+                    >
+                        Hello, my love
+                    </motion.p>
+
+                    <motion.div
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: 1.4, type: 'spring', stiffness: 180 }}
+                        className="mt-6 text-5xl sm:text-6xl"
+                    >
+                        <motion.span
+                            animate={{ scale: [1, 1.15, 1] }}
+                            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+                        >
+                            ❤️
+                        </motion.span>
+                    </motion.div>
+                </div>
+            </motion.div>
+        </div>
+    );
+}
