@@ -3,7 +3,7 @@ import { Poppins } from "next/font/google";
 import { Heart } from "lucide-react"; // ← import heart icon dari lucide-react
 import "./globals.css";
 import MusicPlayer from "../components/ui/MusicPlayer";
-import { playlist } from "../types";
+import { title } from "process";
 
 // Konfigurasi Poppins (pilih weight yang kamu butuhkan)
 const poppins = Poppins({
@@ -13,10 +13,55 @@ const poppins = Poppins({
   display: "swap", // biar gak ada FOIT
 });
 
+const playlist = [
+  {
+    id: '1',
+    title: 'Sailor Song',
+    artist: 'Gigi Perez',
+    audioSrc: '/audio/sailorsong.mp3',
+    coverImage: "/cover/sailor.jpg",
+    lyrics: [
+      { time: 0, text: 'blah bleh bleh' },
+    ]
+  },
+  {
+    id: '2',
+    title: 'You & I',
+    artist: 'One Direction',
+    audioSrc: '/audio/iyou.mp3',
+    coverImage: '/cover/iyou.jpg',
+    lyrics: [
+      { time: 0, text: 'blah bleh bleh' },
+    ]
+  },
+  {
+    id: '3',
+    title: 'Nobody But You',
+    artist: 'Sonder ft Jorja Smith',
+    audioSrc: '/audio/nobody.mp3',
+    coverImage: '/cover/nobody.jpg',
+    lyrics: [
+      { time: 0, text: 'blah bleh bleh' },
+    ]
+  },
+  {
+    id: '4',
+    title: 'Alexandra',
+    artist: 'Reality Club',
+    audioSrc: '/audio/reality.mp3',
+    coverImage: '/cover/alexandra.jpg',
+    lyrics: [
+      { time: 0, text: 'blah bleh bleh' },
+    ]
+  }
+  
+  
+]
+
+
 export const metadata: Metadata = {
   title: "ValGift",
   description: "cr : Amri Ikhda",
-  // Optional: bisa tambah icon heart di tab browser
   icons: {
     icon: "/favicon.ico", // kalau mau ganti favicon jadi heart nanti buat sendiri ya
   },

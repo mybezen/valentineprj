@@ -29,10 +29,10 @@ export default function IntroPhase({ onStart }: IntroPhaseProps) {
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-                    className="mb-16 text-center"
+                    className="mb-8 text-center"
                 >
-                    <h1 className="text-5xl md:text-7xl font-light tracking-tight text-white mb-6 leading-tight">
-                        For You
+                    <h1 className="text-4xl md:text-5xl font-light tracking-tight text-white mb-12 leading-tight">
+                        Happy Valentine Day
                     </h1>
                     <motion.div
                         initial={{ width: 0 }}
@@ -49,7 +49,7 @@ export default function IntroPhase({ onStart }: IntroPhaseProps) {
                     transition={{ duration: 1, delay: 0.7 }}
                     className="text-zinc-300 text-center mb-16 text-base md:text-lg tracking-wide leading-relaxed font-light"
                 >
-                    There's something I've been wanting to show you...
+                    JAJAJAJA apani?!
                 </motion.p>
 
                 {/* CTA Button - clean, elegant, subtle shimmer */}
@@ -60,7 +60,7 @@ export default function IntroPhase({ onStart }: IntroPhaseProps) {
                     transition={{ duration: 0.8, delay: 1 }}
                     whileHover={{ scale: 1.03 }}
                     whileTap={{ scale: 0.97 }}
-                    className="group relative px-10 py-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white font-light text-base tracking-wide overflow-hidden transition-all duration-500 hover:bg-white/15 hover:border-rose-300/40"
+                    className="group relative mt-8 px-10 py-4 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 text-white font-light text-base tracking-wide overflow-hidden transition-all duration-500 hover:bg-white/15 hover:border-rose-300/40"
                 >
                     {/* Gentle shimmer on hover */}
                     <motion.div
@@ -88,7 +88,7 @@ export default function IntroPhase({ onStart }: IntroPhaseProps) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 0.6 }}
                     transition={{ duration: 1.5, delay: 1.5 }}
-                    className="absolute bottom-10 left-1/2 -translate-x-1/2"
+                    className="absolute -bottom-12 left-1/2 -translate-x-1/2"
                 >
                     <motion.div
                         animate={{ y: [0, 6, 0] }}

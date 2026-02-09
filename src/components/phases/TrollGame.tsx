@@ -12,11 +12,11 @@ const HEART_SIZE = 80;
 const PADDING = 32;
 
 const MESSAGES = [
-    "Almost there...",
-    "You're getting closer ♥",
-    "Keep going, love",
-    "Just a little more...",
-    "I knew you could do it",
+    "coba pencet emoji lopenya",
+    "eits adik belajar lagi",
+    "tangkep kocak",
+    "yaela gini doang kah",
+    "yaudah deh ni pencet",
 ];
 
 export default function TrollGame({ onComplete }: TrollGameProps) {
@@ -108,7 +108,7 @@ export default function TrollGame({ onComplete }: TrollGameProps) {
                                 transition={{ delay: 0.2, duration: 0.8 }}
                                 className="text-3xl md:text-4xl font-light text-white mb-6 tracking-wide"
                             >
-                                Catch My Heart
+                                game apa ni?
                             </motion.h2>
 
                             <motion.p
@@ -117,8 +117,8 @@ export default function TrollGame({ onComplete }: TrollGameProps) {
                                 transition={{ delay: 0.4, duration: 0.8 }}
                                 className="text-zinc-300 text-base md:text-lg mb-10 leading-relaxed"
                             >
-                                Tap the heart as many times as you can.
-                                It might try to escape... but don't give up.
+                                tinggal pencet pencet aja tu emoji lopenya.
+                                awas bisa kabur WKWKWK
                             </motion.p>
 
                             <motion.button
@@ -128,7 +128,7 @@ export default function TrollGame({ onComplete }: TrollGameProps) {
                                 transition={{ delay: 0.6, duration: 0.8 }}
                                 whileHover={{ scale: 1.05 }}
                                 whileTap={{ scale: 0.95 }}
-                                className="px-10 py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white font-light text-lg tracking-wide hover:bg-white/15 transition-all duration-300"
+                                className="mt-8 px-10 py-4 bg-white/10 backdrop-blur-md border border-white/20 rounded-full text-white font-light text-lg tracking-wide hover:bg-white/15 transition-all duration-300"
                             >
                                 I'm Ready
                             </motion.button>
@@ -198,10 +198,10 @@ export default function TrollGame({ onComplete }: TrollGameProps) {
                             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
                             className="text-7xl sm:text-8xl mb-6"
                         >
-                            ❤️
+                            😂
                         </motion.div>
                         <p className="text-white text-2xl sm:text-3xl font-light tracking-wide">
-                            You caught my heart
+                            JAJAJAJA ADIK ADIK
                         </p>
                     </motion.div>
                 </motion.div>

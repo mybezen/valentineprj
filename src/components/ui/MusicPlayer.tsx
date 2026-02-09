@@ -21,6 +21,7 @@ interface MusicPlayerProps {
   playlist: Song[]
 }
 
+
 export default function MusicPlayer({ playlist }: MusicPlayerProps) {
   return (
     <LazyMotion features={domAnimation}>
