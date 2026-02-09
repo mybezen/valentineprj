@@ -108,7 +108,7 @@ export default function TrollGame({ onComplete }: TrollGameProps) {
                                 transition={{ delay: 0.2, duration: 0.8 }}
                                 className="text-3xl md:text-4xl font-light text-white mb-6 tracking-wide"
                             >
-                                game apa ni?
+                                WOI AKU TANTANG KAMU
                             </motion.h2>
 
                             <motion.p

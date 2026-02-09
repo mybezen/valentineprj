@@ -36,7 +36,7 @@ export default function ColorTransition({ onComplete }: ColorTransitionProps) {
       {/* Celebration emojis */}
       {showEmoji && (
         <div className="relative z-10">
-          {['❤️', '💕', '✨', '💖', '🌸', '💝'].map((emoji, i) => (
+          {['😂', '😋', '😎', '😉', '😅', '🥶'].map((emoji, i) => (
             <motion.div
               key={i}
               initial={{ 
@@ -87,7 +87,7 @@ export default function ColorTransition({ onComplete }: ColorTransitionProps) {
             }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            Perfect!
+            JAJAJAJA maaf ya aku kerjain
           </motion.h2>
           <motion.div
             initial={{ width: 0 }}

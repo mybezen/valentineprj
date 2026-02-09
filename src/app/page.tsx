@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { AnimatePresence } from 'motion/react';
+import { AnimatePresence } from 'framer-motion';
 import IntroPhase from '../components/phases/IntroPhase';
 import TrollGame from '../components/phases/TrollGame';
 import ColorTransition from '../components/ui/ColorTransition';
@@ -14,38 +14,61 @@ import MusicPlayer from '../components/ui/MusicPlayer';
 const DUMMY_PHOTOS: PhotoItem[] = [
   {
     id: '1',
-    src: 'https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=400&h=711&fit=crop',
-    alt: 'Momen pertama kita'
+    src: '/images/photos/first-chat.jpeg',
+    alt: 'first chat kitaa (lucu banget wetuek)'
   },
   {
     id: '2',
-    src: 'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=400&h=711&fit=crop',
-    alt: 'Senyummu yang indah'
+    src: '/images/photos/firstdccall.jpeg',
+    alt: 'first call kita di discordd'
   },
   {
     id: '3',
-    src: 'https://images.unsplash.com/photo-1522673607186-0458ffe86ffa?w=400&h=711&fit=crop',
-    alt: 'Petualangan bersama'
+    src: '/images/photos/contactname.jpeg',
+    alt: 'ini pas kamu ganti nama kontak akuu huhuh lucu banget'
   },
   {
     id: '4',
-    src: 'https://images.unsplash.com/photo-1502209877429-d7c6df9eb3f9?w=400&h=711&fit=crop',
-    alt: 'Kenangan manis'
+    src: '/images/photos/sitengiladuhay.jpeg',
+    alt: 'tengil bangett, aku sukaa sukaa sukaa hawhdawhdah'
   },
   {
     id: '5',
-    src: 'https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&h=711&fit=crop',
-    alt: 'Waktu bersama yang berharga'
+    src: '/images/photos/perangstiker.jpeg',
+    alt: 'when we perang stiker nii, lucuuu'
   },
   {
     id: '6',
-    src: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&h=711&fit=crop',
-    alt: 'Tawa dan kebahagiaan'
+    src: '/images/photos/tictactoee.jpeg',
+    alt: 'waktu kita main tictactoee'
   },
+  {
+    id: '7',
+    src: '/images/photos/carahapusmapfisch.jpeg',
+    alt: 'ini pas aku mancing terus di rosblok (maaf ya sayang huhu lucu kamunya)'
+  },
+  {
+    id: '8',
+    src: '/images/photos/samenn.jpeg',
+    alt: 'lucu banget couple nicknamee'
+  },
+  {
+    id: '9',
+    src: '/images/photos/mm.jpeg',
+    alt: 'waktu kita mabar tuu berdua jaa'
+  },
+  {
+    id: '10',
+    src: '/images/photos/ingamee.jpeg',
+    alt: 'makasi ya sayangkuu udah nemenin aku main terus hezhehe'
+  }
 ];
 
 // Replace with your commissioned artwork or special image
 const GIFT_IMAGE = 'https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=400&h=711&fit=crop';
+
+// Replace with your actual Google Drive link
+const GIFT_LINK = 'https://drive.google.com/your-special-gift-link';
 
 // Debug mode - set to true to enable phase navigation buttons
 const DEBUG_MODE = false;
@@ -149,6 +172,7 @@ export default function HomePage() {
           <GiftPhase 
             key="gift"
             giftImageSrc={GIFT_IMAGE}
+            giftLink={GIFT_LINK}
           />
         )}
       </AnimatePresence>

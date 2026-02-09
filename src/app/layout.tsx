@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import { Heart } from "lucide-react"; // ← import heart icon dari lucide-react
 import "./globals.css";
 import MusicPlayer from "../components/ui/MusicPlayer";
-import { title } from "process";
 
 // Konfigurasi Poppins (pilih weight yang kamu butuhkan)
 const poppins = Poppins({
@@ -51,7 +49,9 @@ const playlist = [
     audioSrc: '/audio/reality.mp3',
     coverImage: '/cover/alexandra.jpg',
     lyrics: [
-      { time: 0, text: 'blah bleh bleh' },
+      { time: 0, text: 'Just like a certain motorbike gang from Charming' },
+      { time: 9, text: 'Or you were looking for the old ultraviolence, you`re trouble' },
+      { time: 19, text: 'yes I knew, right from the start' },
     ]
   }
   
