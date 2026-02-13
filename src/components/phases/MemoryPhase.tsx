@@ -69,7 +69,7 @@ export default function MemoryPhase({ text, onContinue }: MemoryPhaseProps) {
         transition={{ delay: 0.3, duration: 1, type: 'spring', stiffness: 100 }}
         className="text-3xl sm:text-5xl font-light mb-6 sm:mb-12 tracking-wide text-center"
       >
-        Kenangan Kita
+        our memories
       </motion.h1>
 
       <div 
@@ -84,7 +84,7 @@ export default function MemoryPhase({ text, onContinue }: MemoryPhaseProps) {
         onClick={onContinue}
         className="mt-6 sm:mt-16 px-8 sm:px-10 py-3 sm:py-4 bg-white/5 rounded-full text-white font-light text-base sm:text-lg tracking-wide hover:bg-white/10 transition-all duration-300 shadow-md border border-white/20 backdrop-blur-md"
       >
-        Ke Akhir Cerita
+        go to ending
       </animated.button>
     </motion.div>
   );
