@@ -19,17 +19,31 @@ const playlist = [
     audioSrc: '/audio/sailorsong.mp3',
     coverImage: "/cover/sailor.jpg",
     lyrics: [
-      { time: 0, text: 'blah bleh bleh' },
+      { time: 0, text: '....' },
+      { time: 25, text: 'I saw her in the rightest way\nLooking like Anne Hathaway' },
+      { time: 35, text: 'Laughing while she hit her' },
+      { time: 39, text: 'Pen And coughed,\n and coughed' },
+      { time: 44, text: 'And then, she came up to my knees' },
+      { time: 50, text: 'Begging, "Baby, would you please?"' },
+      { time: 56, text: 'Do the things you said you`d do to me, to me?"' },
+      { time: 64, text: 'Oh, won`t you kiss me on the' },
+      { time: 67, text: 'Mouth and love me like a sailor?' },
+      { time: 70, text: 'And when you get a taste' },
+      { time: 72, text: 'Can you tell me what`s my flavor?' },
+      { time: 75, text: 'I don`t believe in God' },
+      { time: 77, text: 'but I believe that you`re my savior' },
+      { time: 80, text: 'capek ah liriknya panjang banget jujur' },
+      { time: 85, text: '....' },
     ]
   },
   {
     id: '2',
-    title: 'You & I',
+    title: 'Perfect',
     artist: 'One Direction',
-    audioSrc: '/audio/iyou.mp3',
-    coverImage: '/cover/iyou.jpg',
+    audioSrc: '/audio/perfek.mp3',
+    coverImage: '/cover/perfek.png',
     lyrics: [
-      { time: 0, text: 'blah bleh bleh' },
+      { time: 0, text: '....' },
     ]
   },
   {
@@ -39,7 +53,7 @@ const playlist = [
     audioSrc: '/audio/nobody.mp3',
     coverImage: '/cover/nobody.jpg',
     lyrics: [
-      { time: 0, text: 'blah bleh bleh' },
+      { time: 0, text: '....' },
     ]
   },
   {
