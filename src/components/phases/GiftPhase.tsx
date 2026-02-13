@@ -358,9 +358,10 @@ interface RealGiftProps {
     onContinue: () => void; // New prop for continuing
 }
 
-// Modified RealGift component with proper typing
+// Modified RealGift component with proper typing and image loader
 const RealGift = forwardRef<HTMLDivElement, RealGiftProps>(({ imageSrc, giftLink, onContinue }, ref) => {
     const [modalOpen, setModalOpen] = useState(false);
+    const [isImageLoaded, setIsImageLoaded] = useState(false); // New state for image loading
 
     const handleLanjut = () => {
         setModalOpen(false);
@@ -394,10 +395,30 @@ const RealGift = forwardRef<HTMLDivElement, RealGiftProps>(({ imageSrc, giftLink
                 transition={{ delay: 0.4, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
                 onClick={() => setModalOpen(true)}
             >
+                {/* Image Loader */}
+                <AnimatePresence>
+                    {!isImageLoaded && (
+                        <motion.div
+                            initial={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="absolute inset-0 flex items-center justify-center bg-zinc-900 z-10"
+                        >
+                            <motion.div
+                                className="w-16 h-16 border-4 border-zinc-500 border-t-white rounded-full"
+                                animate={{ rotate: 360 }}
+                                transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+                            />
+                        </motion.div>
+                    )}
+                </AnimatePresence>
+
+                {/* Gift Image with fade-in */}
                 <img
                     src={imageSrc}
                     alt="Your special gift"
-                    className="w-full h-full object-contain"
+                    className={`w-full h-full object-contain transition-opacity duration-500 ${isImageLoaded ? 'opacity-100' : 'opacity-0'}`}
+                    onLoad={() => setIsImageLoaded(true)}
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
