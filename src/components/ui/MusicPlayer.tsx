@@ -45,20 +45,27 @@ function MusicPlayerContent({ playlist }: MusicPlayerProps) {
   const currentSong = playlist[currentSongIndex]
   const hasLyrics = !!currentSong.lyrics && currentSong.lyrics.length > 0
 
-  // Reset audio source when song changes
+  // Load audio source saat component mount (page load)
+  useEffect(() => {
+    if (audioRef.current && playlist.length > 0) {
+      console.log('Loading initial audio source on mount:', playlist[0].audioSrc);
+      audioRef.current.src = playlist[0].audioSrc;
+      audioRef.current.load();
+    }
+  }, []); // Empty dependency: Jalankan sekali saat mount
+
+  // Update audio source when song changes
   useEffect(() => {
     if (audioRef.current) {
-      audioRef.current.src = currentSong.audioSrc
-      audioRef.current.load()
-      setCurrentTime(0)
-      setCurrentLyricIndex(0)
+      console.log('Updating audioSrc:', currentSong.audioSrc);
+      audioRef.current.src = currentSong.audioSrc;
+      audioRef.current.load();
+      setCurrentTime(0);
+      setCurrentLyricIndex(0);
 
-      // Auto play only if already playing (after user interaction)
-      if (isPlaying) {
-        audioRef.current.play().catch(e => console.log("Play failed:", e))
-      }
+      // Jangan auto play di sini, biar user gesture dari klik
     }
-  }, [currentSongIndex, currentSong.audioSrc, isPlaying])
+  }, [currentSongIndex, currentSong.audioSrc]);
 
   // Time update & lyric sync
   useEffect(() => {
@@ -129,21 +136,21 @@ function MusicPlayerContent({ playlist }: MusicPlayerProps) {
     setShowLyrics(false)
     const prevIndex = currentSongIndex === 0 ? playlist.length - 1 : currentSongIndex - 1
     setCurrentSongIndex(prevIndex)
-    setIsPlaying(true) // auto play when changing song
+    if (!isPlaying) togglePlay();  // Play otomatis kalau belum playing
   }
 
   const handleNextSong = () => {
     setShowLyrics(false)
     const nextIndex = (currentSongIndex + 1) % playlist.length
     setCurrentSongIndex(nextIndex)
-    setIsPlaying(true)
+    if (!isPlaying) togglePlay();  // Play otomatis kalau belum playing
   }
 
   const handleSongSelect = (index: number) => {
     setShowLyrics(false)
     setCurrentSongIndex(index)
     setShowPlaylist(false)
-    setIsPlaying(true)
+    if (!isPlaying) togglePlay();  // Play otomatis kalau belum playing
   }
 
   // Auto show lyrics when expanded & playing
@@ -165,9 +172,8 @@ function MusicPlayerContent({ playlist }: MusicPlayerProps) {
   const handleAcceptMusic = () => {
     setShowWelcomeModal(false)
     setIsExpanded(true)
-    setShowPlaylist(true) // langsung buka playlist biar keren
-    setIsPlaying(true)
-    // Audio akan di-play di useEffect song change
+    setShowPlaylist(true) // langsung buka playlist
+    // Jangan setIsPlaying(true) di sini. User akan klik song di playlist untuk load + play
   }
 
   const handleDeclineMusic = () => {
@@ -203,7 +209,9 @@ function MusicPlayerContent({ playlist }: MusicPlayerProps) {
         preload="auto"
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
-      />
+      >
+        <source src={currentSong.audioSrc} type="audio/mpeg" />  // Tambah source tag
+      </audio>
 
       {/* =================== WELCOME MODAL =================== */}
       <AnimatePresence>
@@ -436,10 +444,9 @@ function MusicPlayerContent({ playlist }: MusicPlayerProps) {
                 {/* Controls */}
                 <div className="flex items-center justify-center gap-4 mb-4">
                   <button onClick={handlePrevSong} className="text-white/70 hover:text-white transition-colors">
-                    <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M6 6h2v12H6zM16 6h2v12h-2z" />
-                      <path d="M9 5v14l11-7z" />
-                    </svg>
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14V10m0 0V6m0 4H8m4 0h4m-4 4l-7 7m7-7l7 7" />
+                    </svg> {/* Icon backward lebih bagus (skip previous) */}
                   </button>
 
                   <button
@@ -458,10 +465,9 @@ function MusicPlayerContent({ playlist }: MusicPlayerProps) {
                   </button>
 
                   <button onClick={handleNextSong} className="text-white/70 hover:text-white transition-colors">
-                    <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
-                      <path d="M6 6h2v12H6zM16 6h2v12h-2z" />
-                      <path d="M9 5v14l11-7z" />
-                    </svg>
+                    <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v4m0 0v4m0-4H8m4 0h4m-4-4l-7-7m7 7l7-7" />
+                    </svg> {/* Icon forward lebih bagus (skip next) */}
                   </button>
                 </div>
 
@@ -511,7 +517,10 @@ function MusicPlayerContent({ playlist }: MusicPlayerProps) {
                         {playlist.map((song, idx) => (
                           <button
                             key={song.id}
-                            onClick={() => handleSongSelect(idx)}
+                            onClick={() => {
+                              handleSongSelect(idx);
+                              if (!isPlaying) togglePlay();  // Play otomatis kalau belum playing
+                            }}  // ← Update: Klik song = load + play langsung kalau belum play
                             className={`w-full p-2 rounded-lg flex items-center gap-3 transition-all ${
                               idx === currentSongIndex
                                 ? 'bg-white/15'

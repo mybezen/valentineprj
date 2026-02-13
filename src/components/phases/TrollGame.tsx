@@ -8,11 +8,19 @@ interface TrollGameProps {
 }
 
 const REQUIRED_CLICKS = 5;
-const HEART_SIZE = 80;
-const PADDING = 32;
+const HEART_SIZE = 120;
+const PADDING = 64;
+
+const IMAGES = [
+    "/images/facegames/face1.png",
+    "/images/facegames/face2.png",
+    "/images/facegames/face3.png",
+    "/images/facegames/face4.png",
+    "/images/facegames/face5.png",
+];
 
 const MESSAGES = [
-    "coba pencet emoji lopenya",
+    "coba tangkep akuu",
     "eits adik belajar lagi",
     "tangkep kocak",
     "yaela gini doang kah",
@@ -21,6 +29,7 @@ const MESSAGES = [
 
 export default function TrollGame({ onComplete }: TrollGameProps) {
     const [clicks, setClicks] = useState(0);
+    const [currentIndex, setCurrentIndex] = useState(0);
     const [currentMessage, setCurrentMessage] = useState(MESSAGES[0]);
     const [showSuccess, setShowSuccess] = useState(false);
     const [showInstruction, setShowInstruction] = useState(true); // kontrol instruksi awal
@@ -51,6 +60,7 @@ export default function TrollGame({ onComplete }: TrollGameProps) {
 
         const msgIndex = Math.min(newClicks - 1, MESSAGES.length - 1);
         setCurrentMessage(MESSAGES[msgIndex]);
+        setCurrentIndex(msgIndex);
 
         if (newClicks < REQUIRED_CLICKS) {
             const pos = getRandomPosition();
@@ -108,7 +118,7 @@ export default function TrollGame({ onComplete }: TrollGameProps) {
                                 transition={{ delay: 0.2, duration: 0.8 }}
                                 className="text-3xl md:text-4xl font-light text-white mb-6 tracking-wide"
                             >
-                                WOI AKU TANTANG KAMU
+                                aku ada minigame ni buat kamu
                             </motion.h2>
 
                             <motion.p
@@ -117,8 +127,7 @@ export default function TrollGame({ onComplete }: TrollGameProps) {
                                 transition={{ delay: 0.4, duration: 0.8 }}
                                 className="text-zinc-300 text-base md:text-lg mb-10 leading-relaxed"
                             >
-                                tinggal pencet pencet aja tu emoji lopenya.
-                                awas bisa kabur WKWKWK
+                                cara mainnya? tangkep tangkepin aja aku yang melayang layang tu
                             </motion.p>
 
                             <motion.button
@@ -163,19 +172,23 @@ export default function TrollGame({ onComplete }: TrollGameProps) {
                     style={{
                         width: HEART_SIZE,
                         height: HEART_SIZE,
-                        opacity: showInstruction ? 0 : 1,               // ← move opacity here
+                        opacity: showInstruction ? 0 : 1,
                     }}
                     whileTap={{ scale: 0.92 }}
                     initial={{ opacity: 0 }}
                     onClick={handleClick}
                 >
-                    <svg
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                        className="w-full h-full text-rose-500 drop-shadow-[0_0_24px_rgba(244,63,94,0.6)]"
-                    >
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                    </svg>
+                    <AnimatePresence mode="wait">
+                        <motion.img
+                            key={currentIndex}
+                            src={IMAGES[currentIndex]}
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 1.2 }}
+                            transition={{ duration: 0.35 }}
+                            className="absolute inset-0 w-full h-full object-contain drop-shadow-[0_0_24px_rgba(244,63,94,0.6)]"
+                        />
+                    </AnimatePresence>
                 </motion.button>
             </div>
 

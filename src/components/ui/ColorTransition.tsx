@@ -87,7 +87,7 @@ export default function ColorTransition({ onComplete }: ColorTransitionProps) {
             }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            JAJAJAJA maaf ya aku kerjain
+            CUPU BANGET DIKKKK
           </motion.h2>
           <motion.div
             initial={{ width: 0 }}

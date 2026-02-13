@@ -9,6 +9,10 @@ import GalleryPhase from '../components/phases/GalleryPhase';
 import GiftPhase from '../components/phases/GiftPhase';
 import type { Phase, PhotoItem } from '../types';
 import MusicPlayer from '../components/ui/MusicPlayer';
+import DrownedTransition from '../components/phases/DrownedTransition';
+import FlashbackPhase from '../components/phases/FlashbackPhase';
+import MemoryPhase from '../components/phases/MemoryPhase';
+import EndingPhase from '../components/phases/EndingPhase';
 
 // Dummy photos - Replace with your actual photos
 const DUMMY_PHOTOS: PhotoItem[] = [
@@ -65,13 +69,18 @@ const DUMMY_PHOTOS: PhotoItem[] = [
 ];
 
 // Replace with your commissioned artwork or special image
-const GIFT_IMAGE = 'https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?w=400&h=711&fit=crop';
+const GIFT_IMAGE = '/images/commisionart/cms.png';
 
 // Replace with your actual Google Drive link
-const GIFT_LINK = 'https://drive.google.com/your-special-gift-link';
+const GIFT_LINK = 'https://drive.google.com/drive/folders/1JnrtWTrTfw-HBs-0lc_FAIuPOOEaBbyt';
 
 // Debug mode - set to true to enable phase navigation buttons
 const DEBUG_MODE = false;
+
+const MEMORY_TEXT = `happy valentine’s day, sayangku 🤍
+aku cuma mau bilang aku bersyukur banget punya kamu. dari sekian banyak kemungkinan di dunia ini, aku bisa ketemu dan jalan sama kamu tuh rasanya ga pernah aku anggap biasa. you mean so much to me, more than you probably realize.
+maaf ya kalau selama ini aku masih banyak salah, masih belajar, kadang kurang peka atau bikin kamu kesel. i’m still growing, tapi aku selalu serius sama kamu dan hubungan ini.
+dan tolong terima hadiah kecil dari aku yaa hehehe, mungkin ga seberapa dan ga sempurna, tapi itu tulus dari hati aku buat kamu 🤏🏻🤍 i hope it makes you smile, even just a little.`;
 
 export default function HomePage() {
   const [currentPhase, setCurrentPhase] = useState<Phase>('intro');
@@ -126,7 +135,7 @@ export default function HomePage() {
         </div>
       )}
 
-      <AnimatePresence mode="wait">
+    <AnimatePresence mode="wait">
         {currentPhase === 'intro' && (
           <IntroPhase 
             key="intro"
@@ -173,6 +182,47 @@ export default function HomePage() {
             key="gift"
             giftImageSrc={GIFT_IMAGE}
             giftLink={GIFT_LINK}
+            onContinue={() => {
+              console.log('🎁 Gift: Continuing to drowned transition...');
+              handlePhaseChange('drowned_transition');
+            }}
+          />
+        )}
+
+        {currentPhase === 'drowned_transition' && (
+          <DrownedTransition
+            key="drowned_transition"
+            onComplete={() => {
+              console.log('🌊 Drowned Transition: Complete! Moving to flashback...');
+              handlePhaseChange('flashback');
+            }}
+          />
+        )}
+
+        {currentPhase === 'flashback' && (
+          <FlashbackPhase
+            key="flashback"
+            onContinue={() => {
+              console.log('🔙 Flashback: Continuing to memory...');
+              handlePhaseChange('memory');
+            }}
+          />
+        )}
+
+        {currentPhase === 'memory' && (
+          <MemoryPhase
+            key="memory"
+            text={MEMORY_TEXT}
+            onContinue={() => {
+              console.log('📝 Memory: Continuing to ending...');
+              handlePhaseChange('ending');
+            }}
+          />
+        )}
+
+        {currentPhase === 'ending' && (
+          <EndingPhase
+            key="ending"
           />
         )}
       </AnimatePresence>

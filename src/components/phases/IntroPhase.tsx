@@ -32,7 +32,7 @@ export default function IntroPhase({ onStart }: IntroPhaseProps) {
                     className="mb-8 text-center"
                 >
                     <h1 className="text-4xl md:text-5xl font-light tracking-tight text-white mb-12 leading-tight">
-                        Happy Valentine Day
+                        HAPPY VALENTINE DAY
                     </h1>
                     <motion.div
                         initial={{ width: 0 }}

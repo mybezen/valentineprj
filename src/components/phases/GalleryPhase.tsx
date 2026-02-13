@@ -69,10 +69,10 @@ export default function GalleryPhase({ onContinue, photos }: GalleryPhaseProps) 
     return (
         <div ref={containerRef} className="relative min-h-[300vh] w-full bg-black overflow-hidden">
             {/* Dome Gallery Component - Variasi 1: Hitam Putih */}
-            {/* <DomeGallery photos={domeGalleryPhotos} scrollProgress={scrollYProgress} variant="grayscale" /> */}
+            <DomeGallery photos={domeGalleryPhotos} scrollProgress={scrollYProgress} variant="grayscale" />
 
             {/* Dome Gallery Component - Variasi 2: Warna Asli */}
-            <DomeGallery photos={domeGalleryPhotos} scrollProgress={scrollYProgress} variant="color" />
+            {/* <DomeGallery photos={domeGalleryPhotos} scrollProgress={scrollYProgress} variant="color" /> */}
             {/* Uncomment variasi kedua di atas untuk testing, dan comment variasi pertama jika perlu switch */}
 
             {/* Subtle fixed gradient overlay */}
@@ -138,49 +138,24 @@ export default function GalleryPhase({ onContinue, photos }: GalleryPhaseProps) 
                     </p>
 
                     {/* Spoiler Section */}
-                    <SpoilerSection />
+                    <SpoilerSection onContinue={onContinue} />
 
                 </motion.div>
 
-                {/* Updated CTA Button - more minimal & elegant */}
-                <motion.button
-                    onClick={onContinue}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8, delay: 0.3 }}
-                    whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}
-                    whileTap={{ scale: 0.97 }}
-                    className="px-10 py-4 rounded-full bg-white/5 backdrop-blur-md border border-white/20 text-white font-light text-lg tracking-wide hover:bg-white/10 hover:border-rose-300/30 transition-all duration-400 shadow-sm hover:shadow-md"
-                >
-                    <span className="flex items-center justify-center gap-3">
-                        mau liat plis apa ni
-                        <svg
-                            className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            strokeWidth={1.5}
-                        >
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
-                        </svg>
-                    </span>
-                </motion.button>
             </div>
         </div>
     );
 }
 
-// Add this new component below the existing ones in your file
-
-function SpoilerSection() {
-    const [isOpen, setIsOpen] = useState(false);
+function SpoilerSection({ onContinue }: { onContinue: () => void }) {
+    const [isFirstOpen, setIsFirstOpen] = useState(false);
+    const [isSecondOpen, setIsSecondOpen] = useState(false);
 
     return (
-        <div className="mt-3">
-            {!isOpen ? (
+        <div className="mt-3 text-center">
+            {!isFirstOpen ? (
                 <motion.button
-                    onClick={() => setIsOpen(true)}
+                    onClick={() => setIsFirstOpen(true)}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="px-6 py-3 bg-zinc-800/50 rounded-full text-zinc-300 font-light text-base tracking-wide hover:bg-zinc-700/50 transition-all duration-300 shadow-sm"
@@ -188,20 +163,59 @@ function SpoilerSection() {
                     emang aku senup itu kah sampe selesai segini? coba pencet ini
                 </motion.button>
             ) : (
-                <motion.p
-                    initial={{ opacity: 0, scale: 0.8, y: 20 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                    className="text-zinc-500 text-base"
-                >
-                    TAPI BOONK JAJAJAJAJJAJA,
-                    aku punya sesuatu yg spesial buat kamu sayang, emang ga seberapa tapi tolong diterima yaa
-                </motion.p>
+                <>
+                    <motion.p
+                        initial={{ opacity: 0, scale: 0.8, y: 20 }}
+                        animate={{ opacity: 1, scale: 1, y: 0 }}
+                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                        className="text-zinc-500 text-base mb-4"
+                    >
+                        TAPI BOONK JAJAJAJAJJAJA,
+                        aku punya sesuatu yg spesial buat kamu sayang, emang ga seberapa tapi tolong diterima yaa
+                    </motion.p>
+
+                    {/* Spoiler Kedua */}
+                    {!isSecondOpen ? (
+                        <motion.button
+                            onClick={() => setIsSecondOpen(true)}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="px-6 py-3 bg-zinc-800/50 rounded-full text-zinc-300 font-light text-base tracking-wide hover:bg-zinc-700/50 transition-all duration-300 shadow-sm"
+                        >
+                            HAHAHAHA ADA LAGI, PENCET LAGI NI
+                        </motion.button>
+                    ) : (
+                        <motion.button
+                            onClick={onContinue}
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.8, delay: 0.3 }}
+                            whileHover={{ scale: 1.03, transition: { duration: 0.3 } }}
+                            whileTap={{ scale: 0.97 }}
+                            className="px-10 py-4 rounded-full bg-white/5 backdrop-blur-md border border-white/20 text-white font-light text-lg tracking-wide hover:bg-white/10 hover:border-rose-300/30 transition-all duration-400 shadow-sm hover:shadow-md"
+                        >
+                            <span className="flex items-center justify-center gap-3">
+                                mau liat plis apa ni
+                                <svg
+                                    className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    stroke="currentColor"
+                                    strokeWidth={1.5}
+                                >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+                                </svg>
+                            </span>
+                        </motion.button>
+                    )}
+                </>
             )}
         </div>
     );
 }
-
 
 interface FloatingPhotoProps {
     photo: { id: string; src: string; alt: string };

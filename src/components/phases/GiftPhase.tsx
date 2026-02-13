@@ -19,9 +19,10 @@ import { forwardRef } from 'react'; // Add this import if not already present
 interface GiftPhaseProps {
     giftImageSrc: string;
     giftLink: string; // Added prop for Google Drive link
+    onContinue: () => void; // New prop for continuing to next phase
 }
 
-export default function GiftPhase({ giftImageSrc, giftLink }: GiftPhaseProps) {
+export default function GiftPhase({ giftImageSrc, giftLink, onContinue }: GiftPhaseProps) {
     const [isRevealed, setIsRevealed] = useState(false);
     const [ribbonRemoved, setRibbonRemoved] = useState(false);
     const [activeId, setActiveId] = useState<string | null>(null);
@@ -104,10 +105,10 @@ export default function GiftPhase({ giftImageSrc, giftLink }: GiftPhaseProps) {
                         className="absolute top-10 sm:top-16 left-0 right-0 text-center z-20 px-6"
                     >
                         <h3 className="text-3xl sm:text-4xl font-light text-white tracking-wide mb-3">
-                            A Gift for You
+                            presented for u
                         </h3>
                         <p className="text-zinc-400 text-base sm:text-lg">
-                            Pull the ribbon down to reveal
+                            tarik pitanya ke bawah babee!!
                         </p>
                     </motion.div>
                 )}
@@ -134,7 +135,7 @@ export default function GiftPhase({ giftImageSrc, giftLink }: GiftPhaseProps) {
                                 {showPrank ? (
                                     <PrankGift ref={prankRef} />
                                 ) : (
-                                    <RealGift ref={realRef} imageSrc={giftImageSrc} giftLink={giftLink} />
+                                    <RealGift ref={realRef} imageSrc={giftImageSrc} giftLink={giftLink} onContinue={onContinue} />
                                 )}
                             </motion.div>
                         )}
@@ -282,7 +283,7 @@ function DropZone() {
                         {isOver ? '✨' : '↓'}
                     </motion.div>
                     <p className="text-sm sm:text-base font-medium text-zinc-300">
-                        {isOver ? 'Release to open' : 'Drag ribbon here'}
+                        {isOver ? 'lepas disini biar bisa kebuka' : 'tarik kesinii babee'}
                     </p>
                 </div>
             </motion.div>
@@ -341,7 +342,7 @@ const PrankGift = forwardRef<HTMLDivElement>((props, ref) => {
                         transition={{ delay: 1.2, duration: 1 }}
                         className="text-zinc-400 text-base mt-2"
                     >
-                        Maaf ya, prank dulu... 😅
+                        prenkkkkk
                     </motion.p>
                 </div>
             </motion.div>
@@ -354,10 +355,18 @@ PrankGift.displayName = 'PrankGift';
 interface RealGiftProps {
     imageSrc: string;
     giftLink: string;
+    onContinue: () => void; // New prop for continuing
 }
 
 // Modified RealGift component with proper typing
-const RealGift = forwardRef<HTMLDivElement, RealGiftProps>(({ imageSrc, giftLink }, ref) => {
+const RealGift = forwardRef<HTMLDivElement, RealGiftProps>(({ imageSrc, giftLink, onContinue }, ref) => {
+    const [modalOpen, setModalOpen] = useState(false);
+
+    const handleLanjut = () => {
+        setModalOpen(false);
+        onContinue(); // Trigger next phase on "Lanjut"
+    };
+
     return (
         <div ref={ref} className="w-full max-w-md mx-auto relative">
             {/* Real floating elements */}
@@ -379,56 +388,90 @@ const RealGift = forwardRef<HTMLDivElement, RealGiftProps>(({ imageSrc, giftLink
             ))}
 
             <motion.div
-                className="relative aspect-[4/5] sm:aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl shadow-zinc-500/30 border border-white/10 bg-zinc-900"
+                className="relative aspect-[4/5] sm:aspect-[3/4] rounded-3xl overflow-hidden shadow-2xl shadow-zinc-500/30 border border-white/10 bg-zinc-900 cursor-pointer"
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.4, duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+                onClick={() => setModalOpen(true)}
             >
                 <img
                     src={imageSrc}
                     alt="Your special gift"
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain"
                 />
 
                 <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent" />
-
-                <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-10 text-center">
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.8, duration: 1 }}
-                        className="text-white text-xl sm:text-2xl font-light tracking-wide leading-relaxed"
-                    >
-                        Hello, my love
-                    </motion.p>
-
-                    <motion.a
-                        href={giftLink}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 1.2, duration: 1 }}
-                        className="mt-4 inline-block px-6 py-3 bg-zinc-700/50 rounded-full text-white font-light text-base tracking-wide hover:bg-zinc-600/50 transition-all duration-300 shadow-sm"
-                    >
-                        Open Your Gift on Google Drive
-                    </motion.a>
-
-                    <motion.div
-                        initial={{ scale: 0 }}
-                        animate={{ scale: 1 }}
-                        transition={{ delay: 1.4, type: 'spring', stiffness: 180 }}
-                        className="mt-6 text-5xl sm:text-6xl"
-                    >
-                        <motion.span
-                            animate={{ scale: [1, 1.15, 1] }}
-                            transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
-                        >
-                            ❤️
-                        </motion.span>
-                    </motion.div>
-                </div>
             </motion.div>
+
+            <AnimatePresence>
+                {modalOpen && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 px-4"
+                        onClick={() => setModalOpen(false)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0, y: 50 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.9, opacity: 0, y: 50 }}
+                            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+                            className="bg-zinc-800 rounded-3xl p-6 sm:p-8 max-w-sm w-full text-center shadow-2xl"
+                            onClick={(e) => e.stopPropagation()}
+                        >
+                            <motion.p
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2, duration: 0.8 }}
+                                className="text-white text-xl sm:text-2xl font-light tracking-wide leading-relaxed"
+                            >
+                                HAII SAYANGGG
+                            </motion.p>
+
+                            <motion.p
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.4, duration: 0.8 }}
+                                className="text-zinc-400 text-base mt-2"
+                            >
+                                ni ada gdrivenya juga untuk soft filenya
+                            </motion.p>
+
+                            <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1 }}
+                                transition={{ delay: 0.6, type: 'spring', stiffness: 180 }}
+                                className="mt-6 text-5xl sm:text-6xl"
+                            >
+                                <motion.span
+                                    animate={{ scale: [1, 1.15, 1] }}
+                                    transition={{ duration: 2.5, repeat: Infinity, ease: 'easeInOut' }}
+                                >
+                                    🐻‍❄️
+                                </motion.span>
+                            </motion.div>
+
+                            <div className="mt-6 flex flex-col sm:flex-row justify-center gap-4">
+                                <button
+                                    onClick={handleLanjut}
+                                    className="px-6 py-3 bg-zinc-700/50 rounded-full text-white font-light text-base tracking-wide hover:bg-zinc-600/50 transition-all duration-300 shadow-sm"
+                                >
+                                    lanjut aja ah
+                                </button>
+                                <a
+                                    href={giftLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="px-6 py-3 bg-zinc-700/50 rounded-full text-white font-light text-base tracking-wide hover:bg-zinc-600/50 transition-all duration-300 shadow-sm"
+                                >
+                                    mau ke gdrive duluu
+                                </a>
+                            </div>
+                        </motion.div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
         </div>
     );
 });
